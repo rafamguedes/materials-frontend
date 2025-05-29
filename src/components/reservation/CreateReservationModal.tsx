@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Modal, Form, Input, DatePicker, Button, message, Select } from 'antd';
 import { useReservationContext } from '../../context/ReservationContext';
 import { createReservationApi } from '../../api/ReservationApi';
-import { fetchItemsApi } from '../../api/ItemApi';
-import type { ItemType } from '../../types/ItemType';
+import { useFetchItems } from '../../hooks/useFetchItems';
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import 'dayjs/locale/pt-br';
 
@@ -14,40 +13,11 @@ type CreateReservationModalProps = {
   onCreate?: () => void;
 };
 
-const initialState = {
-  code: '',
-  dateTime: '',
-  status: 'PENDING',
-  userRegistry: '',
-  itemType: '',
-};
-
-const CreateReservationModal: React.FC<CreateReservationModalProps> = ({
-  isOpen,
-  onClose,
-  onCreate,
-  filter,
-}) => {
+function CreateReservationModal({ isOpen, onClose, onCreate, filter } : CreateReservationModalProps) {
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
-  const [items, setItems] = useState<ItemType[]>([]);
-  const [itemsLoading, setItemsLoading] = useState(false);
   const { fetchReservations } = useReservationContext();
-
-  // Carregar os itens do banco ao abrir o modal
-  useEffect(() => {
-    if (isOpen) {
-      setItemsLoading(true);
-      fetchItemsApi()
-        .then((items: ItemType[]) => setItems(items))
-        .catch((err: { message?: string }) => {
-          message.error(err?.message || 'Erro ao carregar equipamentos');
-        })
-        .finally((): void => {
-          setItemsLoading(false);
-        });
-    }
-  }, [isOpen]);
+  const { items, loading: itemsLoading } = useFetchItems(isOpen);
 
   const handleOk = async () => {
     try {
@@ -105,7 +75,6 @@ const CreateReservationModal: React.FC<CreateReservationModalProps> = ({
       <Form
         form={form}
         layout="vertical"
-        initialValues={initialState}
       >
         <Form.Item
           label="Selecione data e hora da reserva"
