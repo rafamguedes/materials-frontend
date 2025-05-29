@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import CreateReservationModal from './CreateReservationModal';
-import { Table, Button, Input, Select, Space, Popconfirm } from 'antd';
-import { useReservationContext } from '../../context/ReservationContext';
 import type { ReservationFilterType } from '../../types/ReservationFilterType';
+import { useReservationContext } from '../../context/ReservationContext';
+import { Table, Button, Input, Select, Space, Popconfirm } from 'antd';
+import { deleteReservationApi } from '../../api/ReservationApi';
 import ReservationActionModal from './ReservationActionModal';
+import CreateReservationModal from './CreateReservationModal';
 import EditReservationModal from './EditReservationModal';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ReservationList.css';
-
 const { Option } = Select;
 
-const ReservationList = () => {
+function ReservationList() {
   const {
     reservations,
     setReservations,
@@ -84,14 +84,10 @@ const ReservationList = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/v1/reservations/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Erro ao deletar reserva');
-      console.log('Reserva deletada com sucesso');
+      await deleteReservationApi(id);
       fetchReservations({ ...filter }, true);
     } catch (err: any) {
-      console.log(err);
+      console.log('Erro ao excluir reserva:', err);
     }
   };
 
