@@ -6,6 +6,11 @@ export async function createReservationApi(payload: any) {
   return axiosInstance.post('/reservations', payload);
 }
 
+export async function fetchReservationByCodeApi(code: string) {
+  const response = await axiosInstance.get(`/reservations/code/${code}`);
+  return response.data;
+}
+
 export async function fetchReservationsApi(
   filter: ReservationFilterType,
   isNewSearch: boolean = false
@@ -25,4 +30,16 @@ export async function fetchReservationsApi(
 
 export async function deleteReservationApi(id: number) {
   return axiosInstance.delete(`/reservations/${id}`);
+}
+
+export async function reservationActionApi(
+  action: 'start' | 'finish' | 'cancel',
+  code: string
+) {
+  const endpoints: Record<'start' | 'finish' | 'cancel', string> = {
+    start: 'start',
+    finish: 'complete',
+    cancel: 'cancel',
+  };
+  return axiosInstance.patch(`/reservations/${endpoints[action]}/${code}`);
 }

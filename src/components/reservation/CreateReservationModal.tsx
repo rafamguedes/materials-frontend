@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input, DatePicker, Button, message, Select } from 'antd';
+import { Modal, Form, Input, DatePicker, Button, Select, notification } from 'antd';
 import { useReservationContext } from '../../context/ReservationContext';
 import { createReservationApi } from '../../api/ReservationApi';
 import { useFetchItems } from '../../hooks/useFetchItems';
@@ -18,6 +18,16 @@ function CreateReservationModal({ isOpen, onClose, onCreate, filter } : CreateRe
   const [loading, setLoading] = React.useState(false);
   const { fetchReservations } = useReservationContext();
   const { items, loading: itemsLoading } = useFetchItems(isOpen);
+  const [api, contextHolder] = notification.useNotification();
+
+  const notify = (type: 'success' | 'error', message: string, description?: string) => {
+    api[type]({
+      message,
+      description,
+      showProgress: true,
+      pauseOnHover: true,
+    });
+  };
 
   const handleOk = async () => {
     try {
@@ -31,11 +41,19 @@ function CreateReservationModal({ isOpen, onClose, onCreate, filter } : CreateRe
 
       form.resetFields();
       onClose();
-      
+
       await fetchReservations(filter, true);
       if (onCreate) onCreate();
+      setTimeout(() => {
+        notify('success', 'Reserva criada com sucesso!');
+      }, 300);
     } catch (err: any) {
-      message.error(err?.message || 'Erro ao criar reserva');
+      const apiMessage =
+        err?.response?.data?.message ||
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message ||
+        'Erro ao criar reserva';
+      notify('error', 'Erro ao criar reserva', apiMessage);
     } finally {
       setLoading(false);
     }
@@ -72,6 +90,7 @@ function CreateReservationModal({ isOpen, onClose, onCreate, filter } : CreateRe
       ]}
       destroyOnClose
     >
+      {contextHolder}
       <Form
         form={form}
         layout="vertical"
@@ -120,6 +139,6 @@ function CreateReservationModal({ isOpen, onClose, onCreate, filter } : CreateRe
       </Form>
     </Modal>
   );
-};
+}
 
 export default CreateReservationModal;
