@@ -3,12 +3,16 @@ import type { ReservationFilterType } from '../../types/ReservationFilterType';
 import { useReservationContext } from '../../context/ReservationContext';
 import { Table, Button, Input, Select, Space, Popconfirm } from 'antd';
 import { deleteReservationApi } from '../../api/ReservationApi';
-import ReservationActionModal from './ReservationActionModal';
-import CreateReservationModal from './CreateReservationModal';
-import EditReservationModal from './EditReservationModal';
+import ReservationActionModal from './ActionModal';
+import CreateReservationModal from './Create';
+import { SearchOutlined } from '@ant-design/icons';
+
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import './ReservationList.css';
+import './Reservation.css';
+import { useNavigate } from 'react-router-dom';
+import HeaderPage from './Header';
 const { Option } = Select;
+const { Search } = Input;
 
 function ReservationList() {
   const {
@@ -27,11 +31,9 @@ function ReservationList() {
     orderByColumn: 'ID',
   });
   const [modalOpen, setModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [actionType, setActionType] = useState<'start' | 'finish' | 'cancel'>('start');
-
+const navigate = useNavigate();
   useEffect(() => {
     setReservations([]);
     setNextToken(undefined);
@@ -147,8 +149,8 @@ function ReservationList() {
             type="text"
             icon={<FaEdit />}
             title="Editar"
-            onClick={() => { setEditId(record.id); setEditModalOpen(true); }}
-          />
+            onClick={() => navigate(`/reservations/edit/${record.id}`)}
+            style={{ fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
           <Popconfirm
             title="Confirmar exclusão"
             description="Tem certeza que deseja excluir esta reserva?"
@@ -161,6 +163,7 @@ function ReservationList() {
               type="text"
               icon={<FaTrash />}
               title="Deletar"
+              style={{ fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               danger
             />
           </Popconfirm>
@@ -174,89 +177,29 @@ function ReservationList() {
     <>
       <div className="reservation-container">
         <header className="reservation-header">
-          <h1>Painel de Reservas</h1>
-          <div className="header-actions">
-            <Button
-              type="primary"
-              className="add-reservation-button"
-              onClick={() => setModalOpen(true)}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Criar Reserva
-            </Button>
-            <Button
-              type="primary"
-              className="start-reservation-button"
-              onClick={() => { setActionType('start'); setActionModalOpen(true); }}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Iniciar
-            </Button>
-            <Button
-              type="primary"
-              className="finish-reservation-button"
-              onClick={() => { setActionType('finish'); setActionModalOpen(true); }}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Finalizar
-            </Button>
-            <Button
-              type="primary"
-              className="cancel-reservation-button"
-              onClick={() => { setActionType('cancel'); setActionModalOpen(true); }}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="primary"
-              className="refresh-button"
-              onClick={() => fetchReservations({ ...filter }, true)}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Atualizar
-            </Button>
-          </div>
+          <h1>Reservas</h1>
+          <HeaderPage
+            onCreate={() => setModalOpen(true)}
+            onStart={() => { setActionType('start'); setActionModalOpen(true); }}
+            onFinish={() => { setActionType('finish'); setActionModalOpen(true); }}
+            onCancel={() => { setActionType('cancel'); setActionModalOpen(true); }}
+            onRefresh={() => fetchReservations({ ...filter }, true)}
+          />
         </header>
         <div className="filter-container" style={{ marginBottom: 24 }}>
           <div className="filter-group">
             <label htmlFor="search">Pesquisar:</label>
-            <Input
+            <Search
               id="search"
               value={filter.search || ''}
               onChange={handleSearchChange}
               placeholder="Digite para pesquisar..."
               allowClear
+              enterButton={
+                <SearchOutlined/>
+              }
+              style={{ maxWidth: 320 }}
+              size="middle"
             />
           </div>
           <div className="filter-group">
@@ -358,12 +301,6 @@ function ReservationList() {
         onClose={() => setModalOpen(false)}
         filter={filter}
         onCreate={() => fetchReservations({ ...filter }, true)}
-      />
-      <EditReservationModal
-        isOpen={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        reservationId={editId!}
-        onUpdate={() => fetchReservations({ ...filter }, true)}
       />
       <ReservationActionModal
         open={actionModalOpen}

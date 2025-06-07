@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Input, Descriptions, Button, Spin, notification } from 'antd';
+import { Drawer, Input, Descriptions, Button, Spin, notification, Space } from 'antd';
 import { reservationActionApi, fetchReservationByCodeApi } from '../../api/ReservationApi';
 
 type ReservationActionModalProps = {
@@ -19,9 +19,9 @@ function ReservationActionModal({ open, onClose, action, onSuccess }: Reservatio
   const actionLabels: Record<'start' | 'finish' | 'cancel', string> = {
     start: 'Iniciar',
     finish: 'Finalizar',
-    cancel: 'Cancelar Reserva',
+    cancel: 'Cancelar',
   };
-
+  
   const notify = (type: 'success' | 'error', message: string, description?: string) => {
     api[type]({
       message,
@@ -58,8 +58,8 @@ function ReservationActionModal({ open, onClose, action, onSuccess }: Reservatio
       await reservationActionApi(action, code);
       setCode('');
       setReservation(null);
-      onClose();
       if (onSuccess) onSuccess();
+      onClose();
     } catch (err: any) {
       const apiMessage = err?.response?.data?.message
         || (typeof err?.response?.data === 'string' ? err.response.data : undefined)
@@ -77,11 +77,36 @@ function ReservationActionModal({ open, onClose, action, onSuccess }: Reservatio
   };
 
   return (
-    <Modal
-      open={open}
+    <Drawer
       title={`${actionLabels[action]} Reserva`}
-      onCancel={handleCancel}
-      footer={null}
+      width={420}
+      onClose={handleCancel}
+      open={open}
+      styles={{
+        body: {
+          paddingBottom: 24,
+        },
+      }}
+      extra={
+        <Space>
+          <Button onClick={handleCancel}>Cancelar</Button>
+          {reservation && (
+            <Button
+              type="primary"
+              onClick={handleAction}
+              loading={loading}
+              style={{
+                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+                border: 'none',
+                fontWeight: 600,
+                letterSpacing: 0.5,
+              }}
+            >
+              {actionLabels[action]}
+            </Button>
+          )}
+        </Space>
+      }
       destroyOnClose
     >
       {contextHolder}
@@ -100,39 +125,22 @@ function ReservationActionModal({ open, onClose, action, onSuccess }: Reservatio
       {fetching && <Spin style={{ marginTop: 16 }} />}
 
       {reservation && (
-        <>
-          <Descriptions
-            bordered
-            size="small"
-            column={1}
-            style={{ marginTop: 24, marginBottom: 16 }}
-          >
-            <Descriptions.Item label="Código">{reservation.code}</Descriptions.Item>
-            <Descriptions.Item label="Data/Hora">
-              {new Date(reservation.dateTime).toLocaleString()}
-            </Descriptions.Item>
-            <Descriptions.Item label="Status">{reservation.status}</Descriptions.Item>
-            <Descriptions.Item label="Usuário">{reservation.userRegistry}</Descriptions.Item>
-            <Descriptions.Item label="Equipamento">{reservation.itemType}</Descriptions.Item>
-          </Descriptions>
-          <Button
-            type="primary"
-            block
-            onClick={handleAction}
-            loading={loading}
-            style={{
-              background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-              border: 'none',
-              fontWeight: 600,
-              letterSpacing: 0.5,
-              marginBottom: 8,
-            }}
-          >
-            {actionLabels[action]}
-          </Button>
-        </>
+        <Descriptions
+          bordered
+          size="small"
+          column={1}
+          style={{ marginTop: 24, marginBottom: 16 }}
+        >
+          <Descriptions.Item label="Código">{reservation.code}</Descriptions.Item>
+          <Descriptions.Item label="Data/Hora">
+            {new Date(reservation.dateTime).toLocaleString()}
+          </Descriptions.Item>
+          <Descriptions.Item label="Status">{reservation.status}</Descriptions.Item>
+          <Descriptions.Item label="Usuário">{reservation.userRegistry}</Descriptions.Item>
+          <Descriptions.Item label="Equipamento">{reservation.itemType}</Descriptions.Item>
+        </Descriptions>
       )}
-    </Modal>
+    </Drawer>
   );
 }
 
