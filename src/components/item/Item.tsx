@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Input, Space, Popconfirm, Select, message } from 'antd';
+import { Table, Button, Input, Space, Popconfirm, Select, message, notification } from 'antd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useItemContext } from '../../context/ItemContext';
+import { deleteItemApi } from '../../api/ItemApi';
 import type { ItemFilterType, ItemType } from '../../types/ItemType';
 import './Item.css';
+import Create from './Create';
+import Update from './Update';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -27,6 +30,16 @@ function ItemList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
+  const [api, contextHolder] = notification.useNotification();
+
+  const notify = (type: 'success' | 'error', message: string, description?: string) => {
+    api[type]({
+      message,
+      description,
+      showProgress: false,
+      pauseOnHover: true,
+    });
+  };
 
   useEffect(() => {
     setItems([]);
@@ -84,9 +97,21 @@ function ItemList() {
     setEditModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    message.info(`Excluir item ${id} (implemente a lógica de exclusão)`);
-  };
+  const handleDelete = async (id: number) => {
+  try {
+    await deleteItemApi(String(id));
+    message.success('Equipamento excluído com sucesso!');
+    fetchItems({ ...filter }, true);
+  } catch (err: any) {
+    const apiMessage =
+        err?.response?.data?.message ||
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message ||
+        'Erro ao excluir equipamento';
+
+    notify('error', 'Erro ao excluir equipamento', apiMessage);
+  }
+};
 
   const translateType = (type: string) => {
     switch (type) {
@@ -347,7 +372,23 @@ function ItemList() {
           </div>
         )}
       </div>
-      {/* Implemente os modais/drawers de cadastro e edição conforme necessário */}
+      
+      <Create
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        filter={filter}
+        onCreate={() => fetchItems({ ...filter }, true)}
+      />
+
+      <Update
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        itemId={editId}
+        filter={filter}
+        onUpdate={() => fetchItems({ ...filter }, true)}
+      />
+
+      {contextHolder}
     </>
   );
 }
