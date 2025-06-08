@@ -368,3 +368,72 @@
     min-width: 100%;
   }
 }
+
+/* Container centralizado e espaçamento geral */
+.edit-reservation-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  margin-top: 24px;
+  padding: 0 24px;
+}
+
+/* Card com sombra e borda arredondada */
+.edit-reservation-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #1976d233;
+  min-height: 300px;
+  width: 100%;
+}
+
+/* Inputs e labels alinhados horizontalmente */
+.edit-reservation-form .ant-row {
+  margin-bottom: 0;
+}
+
+.edit-reservation-form .ant-col {
+  margin-bottom: 0;
+}
+
+/* Inputs de informações secundárias */
+.edit-reservation-info-input {
+  margin-bottom: 16px;
+}
+
+/* Botões de ação alinhados à direita */
+.edit-reservation-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100%;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.edit-reservation-actions .ant-btn {
+  width: 140px;
+  margin-bottom: 12px;
+}
+
+.edit-reservation-actions .ant-btn-primary {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  border: none;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1200px) {
+  .edit-reservation-container {
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 900px) {
+  .edit-reservation-container {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+  .edit-reservation-actions .ant-btn {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}

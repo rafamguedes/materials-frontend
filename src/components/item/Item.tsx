@@ -1,27 +1,28 @@
 import { useState, useEffect } from 'react';
-import type { ReservationFilterType } from '../../types/ReservationFilterType';
-import { useReservationContext } from '../../context/ReservationContext';
-import { Table, Button, Input, Select, Space, Popconfirm } from 'antd';
-import { deleteReservationApi } from '../../api/ReservationApi';
-import ReservationActionModal from './ReservationActionModal';
-import CreateReservationModal from './CreateReservationModal';
-import EditReservationModal from './EditReservationModal';
+import { Table, Button, Input, Space, Popconfirm, Select, message, notification } from 'antd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import './ReservationList.css';
-const { Option } = Select;
+import { useItemContext } from '../../context/ItemContext';
+import { deleteItemApi } from '../../api/ItemApi';
+import type { ItemFilterType, ItemType } from '../../types/ItemType';
+import './Item.css';
+import Create from './Create';
+import Update from './Update';
 
-function ReservationList() {
+const { Option } = Select;
+const { Search } = Input;
+
+function ItemList() {
   const {
-    reservations,
-    setReservations,
+    items,
+    setItems,
     loading,
     error,
     nextToken,
     setNextToken,
-    fetchReservations,
-  } = useReservationContext();
+    fetchItems,
+  } = useItemContext();
 
-  const [filter, setFilter] = useState<ReservationFilterType>({
+  const [filter, setFilter] = useState<ItemFilterType>({
     rows: 5,
     order: 'DESC',
     orderByColumn: 'ID',
@@ -29,20 +30,29 @@ function ReservationList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
-  const [actionModalOpen, setActionModalOpen] = useState(false);
-  const [actionType, setActionType] = useState<'start' | 'finish' | 'cancel'>('start');
+  const [api, contextHolder] = notification.useNotification();
+
+  const notify = (type: 'success' | 'error', message: string, description?: string) => {
+    api[type]({
+      message,
+      description,
+      showProgress: false,
+      pauseOnHover: true,
+    });
+  };
 
   useEffect(() => {
-    setReservations([]);
+    setItems([]);
     setNextToken(undefined);
-    fetchReservations({ ...filter }, true);
-  }, [filter.order, filter.orderByColumn, filter.status, filter.rows, filter.search]);
+    fetchItems({ ...filter }, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter.order, filter.orderByColumn, filter.rows, filter.status, filter.search]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(prev => ({
       ...prev,
       search: e.target.value,
-      nextToken: undefined
+      nextToken: undefined,
     }));
   };
 
@@ -50,7 +60,7 @@ function ReservationList() {
     setFilter(prev => ({
       ...prev,
       order: value as 'ASC' | 'DESC',
-      nextToken: undefined
+      nextToken: undefined,
     }));
   };
 
@@ -58,7 +68,7 @@ function ReservationList() {
     setFilter(prev => ({
       ...prev,
       orderByColumn: value,
-      nextToken: undefined
+      nextToken: undefined,
     }));
   };
 
@@ -66,7 +76,7 @@ function ReservationList() {
     setFilter(prev => ({
       ...prev,
       status: value,
-      nextToken: undefined
+      nextToken: undefined,
     }));
   };
 
@@ -74,84 +84,127 @@ function ReservationList() {
     setFilter(prev => ({
       ...prev,
       rows: value,
-      nextToken: undefined
+      nextToken: undefined,
     }));
   };
 
   const handleLoadMore = () => {
-    fetchReservations({ ...filter, nextToken }, false);
+    fetchItems({ ...filter, nextToken }, false);
+  };
+
+  const handleEdit = (id: number) => {
+    setEditId(id);
+    setEditModalOpen(true);
   };
 
   const handleDelete = async (id: number) => {
-    try {
-      await deleteReservationApi(id);
-      fetchReservations({ ...filter }, true);
-    } catch (err: any) {
-      console.log('Erro ao excluir reserva:', err);
+  try {
+    await deleteItemApi(String(id));
+    message.success('Equipamento excluído com sucesso!');
+    fetchItems({ ...filter }, true);
+  } catch (err: any) {
+    const apiMessage =
+        err?.response?.data?.message ||
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message ||
+        'Erro ao excluir equipamento';
+
+    notify('error', 'Erro ao excluir equipamento', apiMessage);
+  }
+};
+
+  const translateType = (type: string) => {
+    switch (type) {
+      case 'LAPTOP':
+        return 'Notebook';
+      case 'PROJECTOR':
+        return 'Projetor';
+      case 'CAMERA':
+        return 'Câmera';
+      default:
+        return type;
     }
   };
-
+  
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE':
+        return 'Disponível';
+      case 'RESERVED':
+        return 'Reservado';
+      case 'IN_MAINTENANCE':
+        return 'Em manutenção';
+      case 'OUT_OF_SERVICE':
+        return 'Fora de serviço';
+      case 'LOST':
+        return 'Perdido';
+      default:
+        return status;
+    }
+  };
+  
   const columns = [
     {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      width: 70,
+      width: 80,
     },
     {
-      title: 'Código',
-      dataIndex: 'code',
-      key: 'code',
+      title: 'Nome',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Data/Hora',
-      dataIndex: 'dateTime',
-      key: 'dateTime',
-      render: (value: string) => new Date(value).toLocaleString(),
+      title: 'Descrição',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Tipo',
+      dataIndex: 'itemType',
+      key: 'type',
+      render: (value: string) => translateType(value),
+    },
+    {
+      title: 'Número de Série',
+      dataIndex: 'serialNumber',
+      key: 'serialNumber',
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       render: (value: string) => {
-        const statusMap: Record<string, { label: string; className: string }> = {
-          PENDING: { label: 'Pendente', className: 'pending' },
-          IN_PROGRESS: { label: 'Em progresso', className: 'in_progress' },
-          COMPLETED: { label: 'Finalizado', className: 'completed' },
-          CANCELED: { label: 'Cancelado', className: 'canceled' },
-        };
-        const status = statusMap[value] || { label: value, className: '' };
+        const statusClass = {
+          AVAILABLE: 'available',
+          RESERVED: 'reserved',
+          IN_MAINTENANCE: 'in_maintenance',
+          OUT_OF_SERVICE: 'out_of_service',
+          LOST: 'lost',
+        }[value] || '';
         return (
-          <span className={`status-badge ${status.className}`}>
-            {status.label}
+          <span className={`status-badge ${statusClass}`}>
+            {translateStatus(value)}
           </span>
         );
       },
     },
     {
-      title: 'Registro do Usuário',
-      dataIndex: 'userRegistry',
-      key: 'userRegistry',
-    },
-    {
-      title: 'Tipo de Equipamento',
-      dataIndex: 'itemType',
-      key: 'itemType',
-    },
-    {
       title: 'Ações',
       key: 'actions',
-      render: (_: any, record: any) => (
+      width: 100,
+      render: (_: any, record: ItemType) => (
         <Space>
           <Button
             type="text"
             icon={<FaEdit />}
             title="Editar"
-            onClick={() => { setEditId(record.id); setEditModalOpen(true); }}
+            onClick={() => handleEdit(record.id)}
           />
           <Popconfirm
             title="Confirmar exclusão"
-            description="Tem certeza que deseja excluir esta reserva?"
+            description="Tem certeza que deseja excluir este item?"
             okText="Sim"
             cancelText="Cancelar"
             onConfirm={() => handleDelete(record.id)}
@@ -166,15 +219,14 @@ function ReservationList() {
           </Popconfirm>
         </Space>
       ),
-      width: 100,
     },
   ];
 
   return (
     <>
-      <div className="reservation-container">
-        <header className="reservation-header">
-          <h1>Painel de Reservas</h1>
+      <div className="item-container">
+        <header className="item-header">
+          <h1>Equipamentos</h1>
           <div className="header-actions">
             <Button
               type="primary"
@@ -188,54 +240,12 @@ function ReservationList() {
                 letterSpacing: 0.5,
               }}
             >
-              Criar Reserva
-            </Button>
-            <Button
-              type="primary"
-              className="start-reservation-button"
-              onClick={() => { setActionType('start'); setActionModalOpen(true); }}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Iniciar
-            </Button>
-            <Button
-              type="primary"
-              className="finish-reservation-button"
-              onClick={() => { setActionType('finish'); setActionModalOpen(true); }}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Finalizar
-            </Button>
-            <Button
-              type="primary"
-              className="cancel-reservation-button"
-              onClick={() => { setActionType('cancel'); setActionModalOpen(true); }}
-              style={{
-                background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 600,
-                letterSpacing: 0.5,
-              }}
-            >
-              Cancelar
+              Novo Equipamento
             </Button>
             <Button
               type="primary"
               className="refresh-button"
-              onClick={() => fetchReservations({ ...filter }, true)}
+              onClick={() => fetchItems({ ...filter }, true)}
               style={{
                 background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
                 color: '#fff',
@@ -251,12 +261,15 @@ function ReservationList() {
         <div className="filter-container" style={{ marginBottom: 24 }}>
           <div className="filter-group">
             <label htmlFor="search">Pesquisar:</label>
-            <Input
+            <Search
               id="search"
               value={filter.search || ''}
               onChange={handleSearchChange}
-              placeholder="Digite para pesquisar..."
+              placeholder="Pesquisar..."
               allowClear
+              enterButton
+              style={{ maxWidth: 320 }}
+              size="middle"
             />
           </div>
           <div className="filter-group">
@@ -266,13 +279,14 @@ function ReservationList() {
               value={filter.orderByColumn}
               onChange={handleOrderByColumnChange}
               style={{ minWidth: 160 }}
+              placeholder="Ordenar por coluna"
             >
               <Option value="ID">ID</Option>
-              <Option value="CODE">Código</Option>
-              <Option value="DATE_TIME">Data/Hora</Option>
+              <Option value="NAME">Nome</Option>
+              <Option value="DESCRIPTION">Descrição</Option>
+              <Option value="ITEM_TYPE">Tipo</Option>
+              <Option value="SERIAL_NUMBER">Número de série</Option>
               <Option value="STATUS">Status</Option>
-              <Option value="REGISTRY">Registro do Usuário</Option>
-              <Option value="ITEM_TYPE">Tipo de Equipamento</Option>
             </Select>
           </div>
           <div className="filter-group">
@@ -282,6 +296,7 @@ function ReservationList() {
               value={filter.order}
               onChange={handleOrderChange}
               style={{ minWidth: 120 }}
+              placeholder="Ordenar por tipo"
             >
               <Option value="ASC">Ascendente</Option>
               <Option value="DESC">Descendente</Option>
@@ -295,12 +310,14 @@ function ReservationList() {
               onChange={handleStatusChange}
               style={{ minWidth: 140 }}
               allowClear
+              placeholder="Status"
             >
               <Option value="">Todos</Option>
-              <Option value="PENDING">Pendente</Option>
-              <Option value="IN_PROGRESS">Em progresso</Option>
-              <Option value="COMPLETED">Finalizado</Option>
-              <Option value="CANCELED">Cancelado</Option>
+              <Option value="AVAILABLE">Disponível</Option>
+              <Option value="RESERVED">Reservado</Option>
+              <Option value="IN_MAINTENANCE">Em manutenção</Option>
+              <Option value="OUT_OF_SERVICE">Fora de serviço</Option>
+              <Option value="LOST">Perdido</Option>
             </Select>
           </div>
           <div className="filter-group">
@@ -310,6 +327,7 @@ function ReservationList() {
               value={filter.rows}
               onChange={handleRowsChange}
               style={{ minWidth: 100 }}
+              placeholder="Nº de linhas"
             >
               <Option value={5}>5</Option>
               <Option value={10}>10</Option>
@@ -318,6 +336,7 @@ function ReservationList() {
           </div>
         </div>
 
+
         {error && (
           <div className="error-message">
             {error}
@@ -325,13 +344,13 @@ function ReservationList() {
         )}
 
         <Table
-          dataSource={reservations}
+          dataSource={items}
           columns={columns}
           rowKey="id"
           loading={loading}
           pagination={false}
           locale={{
-            emptyText: 'Nenhuma reserva encontrada',
+            emptyText: 'Nenhum equipamento encontrado',
           }}
         />
 
@@ -353,26 +372,25 @@ function ReservationList() {
           </div>
         )}
       </div>
-      <CreateReservationModal
+      
+      <Create
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         filter={filter}
-        onCreate={() => fetchReservations({ ...filter }, true)}
+        onCreate={() => fetchItems({ ...filter }, true)}
       />
-      <EditReservationModal
+
+      <Update
         isOpen={editModalOpen}
         onClose={() => setEditModalOpen(false)}
-        reservationId={editId!}
-        onUpdate={() => fetchReservations({ ...filter }, true)}
+        itemId={editId}
+        filter={filter}
+        onUpdate={() => fetchItems({ ...filter }, true)}
       />
-      <ReservationActionModal
-        open={actionModalOpen}
-        onClose={() => setActionModalOpen(false)}
-        action={actionType}
-        onSuccess={() => fetchReservations({ ...filter }, true)}
-      />
+
+      {contextHolder}
     </>
   );
-};
+}
 
-export default ReservationList;
+export default ItemList;

@@ -1,6 +1,6 @@
-import './Menu.css';
+import './Header.css';
 
-const Menu = () => {
+const Header = () => {
   return (
     <header className="menu-container">
       <div className="menu-content">
@@ -11,9 +11,9 @@ const Menu = () => {
 
         <nav className="menu-items">
           <a href="/" className="menu-item">Reservas</a>
-          <a href="/equipamentos" className="menu-item">Equipamentos</a>
-          <a href="/usuarios" className="menu-item">Usuários</a>
-          <a href="/relatorios" className="menu-item">Relatórios</a>
+          <a href="/items" className="menu-item">Equipamentos</a>
+          <a href="/users" className="menu-item">Usuários</a>
+          <a href="/reports" className="menu-item">Relatórios</a>
           <a href="/perfil" className="menu-item">Perfil</a>
         </nav>
       </div>
@@ -21,4 +21,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default Header;

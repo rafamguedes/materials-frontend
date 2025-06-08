@@ -9,9 +9,14 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nextToken, setNextToken] = useState<string | undefined>();
+  const defaultFilter: ReservationFilterType = {
+    rows: 5,
+    order: 'DESC',
+    orderByColumn: 'ID',
+  };
 
   const fetchReservations = useCallback(
-    async (filter: ReservationFilterType, isNewSearch: boolean = false) => {
+    async (filter: ReservationFilterType = defaultFilter, isNewSearch: boolean = false) => {
       try {
         setLoading(true);
         setError(null);
