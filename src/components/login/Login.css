@@ -1,0 +1,161 @@
+.login-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  background-color: #1a1b1c;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+}
+
+/* Info Section */
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 200px;
+  width: 60%;
+}
+
+.info h1 {
+  margin-bottom: 20px;
+  font-size: 5rem;
+  text-align: center;
+  color: #fff;
+}
+
+.info img {
+  width: 150px;
+  height: 150px;
+}
+
+.info p {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 2rem;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .info {
+    display: none;
+  }
+  .info img {
+    display: none;
+  }
+}
+
+/* Login Box */
+.login-box {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+@media (max-width: 768px) {
+  .login-box {
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box .border-title {
+  width: 5%;
+  border: 3px solid #fff;
+  margin-top: -20px;
+  margin-bottom: 20px;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.login-box input {
+  width: 300px;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-box input::placeholder {
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.login-box input:focus {
+  outline: 0;
+}
+
+.login-box button {
+  width: 300px;
+  height: 40px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.login-box button:hover {
+  background-color: #444;
+  transition: 0.5s;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+
+.login-box .icon {
+  position: relative;
+  right: 25px;
+  top: 3px;
+  cursor: pointer;
+}
+
+.login-box .register {
+  width: 300px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 2rem;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.login-box .register a {
+  color: #fff;
+  font-weight: 700;
+}
+
+.login-box .register .back-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 5px;
+}
