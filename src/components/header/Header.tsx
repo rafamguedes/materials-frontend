@@ -1,6 +1,7 @@
 import './Header.css';
 import { useAuth } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 
 const Header = () => {
   const { Logout } = useAuth();
@@ -17,6 +18,7 @@ const Header = () => {
       <div className="menu-content">
         <div className="menu-logo">
           <img src="./src/assets/logo.png" alt="Logo" id="logo-img" />
+          <img src={logo} alt="Logo" id="logo-img" />
           <span className="logo-text">KIPFLOW</span>
         </div>
 
@@ -26,6 +28,7 @@ const Header = () => {
           <a href="/users" className="menu-item">Usuários</a>
           <a href="/reports" className="menu-item">Relatórios</a>
           <a href="/logout" className="menu-item" onClick={handleLogout}>Logout</a>
+          <a href="/reports/reservations" className="menu-item">Relatórios</a>
         </nav>
       </div>
     </header>
