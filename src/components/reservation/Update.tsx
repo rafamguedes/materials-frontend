@@ -17,6 +17,7 @@ import {
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
+import { axiosInstance } from '../../api/Axios';
 import axiosInstance from '../../api/Axios';
 import type { ItemType } from '../../types/ItemType';
 

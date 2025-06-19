@@ -1,4 +1,4 @@
-import axiosInstance from './Axios';
+import { axiosInstance } from './Axios';
 import type { ReservationType } from '../types/ReservationType';
 import type { ReservationFilterType } from '../types/ReservationFilterType';
 
