@@ -8,22 +8,62 @@ import { Layout } from 'antd';
 import React from 'react';
 import Menu from '../components/header/Header';
 import { LoginPage } from '../components/login/Login';
+import Reports from '../components/reports/Reports';
+import { UserList } from '../components/user/User';
+import UserDashboard from '../components/dashboard/Dashboard';
 
-const { Content } = Layout;
+// Layout para ADMIN/MANAGER
+function AdminManagerLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Layout>
+      <Menu />
+      <Layout.Content style={{ margin: '60px 24px 0 24px', background: '#fff', padding: 14 }}>
+        {children}
+      </Layout.Content>
+    </Layout>
+  );
+}
+
+// Layout para USER
+function UserLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Layout>
+      <Layout.Content style={{ minHeight: '100vh', background: '#f5f7fa', padding: 0 }}>
+        {children}
+      </Layout.Content>
+    </Layout>
+  );
+}
 
 function PrivateRoute({ children }: { children: React.ReactElement }) {
   const { signed } = useAuth();
   return signed ? children : <Navigate to="/login" replace />;
 }
 
+function RoleRoute({
+  allowedRoles,
+  children,
+}: {
+  allowedRoles: string[];
+  children: React.ReactElement;
+}) {
+  const { user } = useAuth();
+  if (user && allowedRoles.includes(user.role)) {
+    return children;
+  }
+  if (user && user.role === 'USER') {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Navigate to="/login" replace />;
+}
+
 export function AppRoutes() {
-  const { loading, signed } = useAuth();
+  const { loading, user } = useAuth();
 
   if (loading) {
     return <Loading />;
   }
 
-  // Login deve ficar fora do layout
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
@@ -31,17 +71,67 @@ export function AppRoutes() {
         path="/*"
         element={
           <PrivateRoute>
-            <Layout>
-              <Menu />
-              <Content style={{ margin: '0 24px 0 24px', background: '#fff', padding: 14 }}>
+            {user?.role === 'USER' ? (
+              <UserLayout>
                 <Routes>
-                  <Route path="/reservas" element={<ReservationList />} />
-                  <Route path="/reserva/editar/:id" element={<EditReservationPage />} />
-                  <Route path="/equipamentos" element={<ItemList />} />
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <RoleRoute allowedRoles={['USER']}>
+                        <UserDashboard />
+                      </RoleRoute>
+                    }
+                  />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Routes>
+              </UserLayout>
+            ) : (
+              <AdminManagerLayout>
+                <Routes>
+                  <Route
+                    path="/reservas"
+                    element={
+                      <RoleRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                        <ReservationList />
+                      </RoleRoute>
+                    }
+                  />
+                  <Route
+                    path="/reserva/editar/:id"
+                    element={
+                      <RoleRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                        <EditReservationPage />
+                      </RoleRoute>
+                    }
+                  />
+                  <Route
+                    path="/equipamentos"
+                    element={
+                      <RoleRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                        <ItemList />
+                      </RoleRoute>
+                    }
+                  />
+                  <Route
+                    path="/usuarios"
+                    element={
+                      <RoleRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                        <UserList />
+                      </RoleRoute>
+                    }
+                  />
+                  <Route
+                    path="/relatorios"
+                    element={
+                      <RoleRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                        <Reports />
+                      </RoleRoute>
+                    }
+                  />
                   <Route path="*" element={<Navigate to="/reservas" replace />} />
                 </Routes>
-              </Content>
-            </Layout>
+              </AdminManagerLayout>
+            )}
           </PrivateRoute>
         }
       />

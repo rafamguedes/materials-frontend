@@ -34,19 +34,19 @@ function CreateReservationModal({ isOpen, onClose, onCreate, filter } : CreateRe
       const values = await form.validateFields();
       setLoading(true);
 
-      await createReservationApi({
-        ...values,
-        dateTime: values.dateTime.format('YYYY-MM-DDTHH:mm'),
-      });
+      const payload = {
+        dateTime: values.dateTime.toISOString(),
+        userRegistry: values.userRegistry,
+        itemId: values.itemId,
+      };
+
+      await createReservationApi(payload);
 
       form.resetFields();
       onClose();
 
       await fetchReservations(filter, true);
       if (onCreate) onCreate();
-      setTimeout(() => {
-        notify('success', 'Reserva criada com sucesso!');
-      }, 300);
     } catch (err: any) {
       const apiMessage =
         err?.response?.data?.message ||

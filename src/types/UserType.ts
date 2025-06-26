@@ -18,6 +18,14 @@ export type UserType = {
   };
 };
 
+export type UserTokenType = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  token: string;
+};
+
 export type UserFilterType = {
   order?: 'ASC' | 'DESC';
   search?: string;

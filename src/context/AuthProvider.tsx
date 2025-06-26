@@ -2,11 +2,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { AuthContextData, LoginType } from "../types/AuthContextData";
 import { axiosInstance } from "../api/Axios";
 import { useNavigate } from "react-router-dom";
+import type { UserTokenType } from "../types/UserType";
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<object | null>(null);
+  const [user, setUser] = useState<UserTokenType | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -28,10 +30,11 @@ export const AuthProvider = ({ children }: any) => {
         password,
       });
 
-      const { token, name, email: userEmail, role } = res.data;
-      const loggedInUser = { name, email: userEmail, role };
+      const { token, id, name, email: userEmail, role } = res.data;
+      const loggedInUser = { id, name, email: userEmail, role, token };
 
       setUser(loggedInUser);
+      setToken(token);
 
       localStorage.setItem("@Auth:access_token", token);
       localStorage.setItem("@Auth:user", JSON.stringify(loggedInUser));
@@ -58,7 +61,7 @@ export const AuthProvider = ({ children }: any) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, loading, Login, Logout }}
+      value={{ signed: !!user, user, token, loading, Login, Logout }}
     >
       {children}
     </AuthContext.Provider>

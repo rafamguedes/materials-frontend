@@ -6,3 +6,8 @@ export type ReservationType = {
   userRegistry: string;
   itemType: string;
 };
+
+export type ReservationUpdateType = {
+  dateTime?: string;
+  itemId?: number;
+};

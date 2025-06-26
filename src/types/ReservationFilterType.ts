@@ -5,4 +5,5 @@ export type ReservationFilterType = {
   search?: string;
   nextToken?: string;
   rows?: number;
+  userId?: string;
 };

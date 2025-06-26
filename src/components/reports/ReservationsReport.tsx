@@ -10,8 +10,8 @@ dayjs.locale('pt-br');
 const reservationStatusOptions = [
   { value: 'PENDING', label: 'Pendentes' },
   { value: 'IN_PROGRESS', label: 'Em progresso' },
-  { value: 'COMPLETED', label: 'Finalizadas' },
-  { value: 'CANCELED', label: 'Canceladas' },
+  { value: 'CONFIRMED', label: 'Finalizadas' },
+  { value: 'CANCELLED', label: 'Canceladas' },
 ];
 
 const ReservationsReport: React.FC = () => {

@@ -1,9 +1,15 @@
 import { axiosInstance } from './Axios';
-import type { ReservationType } from '../types/ReservationType';
+import type { ReservationType, ReservationUpdateType } from '../types/ReservationType';
 import type { ReservationFilterType } from '../types/ReservationFilterType';
+import type { createReservationType } from '../types/CreateReservationType';
 
-export async function createReservationApi(payload: any) {
+export async function createReservationApi(payload: createReservationType) {
   return axiosInstance.post('/reservations', payload);
+}
+
+export async function fetchReservationByIdApi(id: number) {
+  const response = await axiosInstance.get(`/reservations/${id}`);
+  return response.data;
 }
 
 export async function fetchReservationByCodeApi(code: string) {
@@ -15,21 +21,20 @@ export async function fetchReservationsApi(
   filter: ReservationFilterType,
   isNewSearch: boolean = false
 ): Promise<{ data: ReservationType[]; nextToken?: string }> {
-  const params: any = {
-    order: filter.order,
-    orderByColumn: filter.orderByColumn,
-    status: filter.status,
-    search: filter.search,
-    rows: filter.rows ?? 5,
-  };
-  if (!isNewSearch && filter.nextToken) params.nextToken = filter.nextToken;
-
-  const response = await axiosInstance.get('/reservations', { params });
+  if (isNewSearch) filter.nextToken = undefined;
+  const response = await axiosInstance.get('/reservations', { params: filter });
   return response.data;
 }
 
 export async function deleteReservationApi(id: number) {
   return axiosInstance.delete(`/reservations/${id}`);
+}
+
+export async function updateReservationApi(
+  id: number,
+  payload: Partial<ReservationUpdateType>
+) {
+  return axiosInstance.put(`/reservations/${id}`, payload);
 }
 
 export async function reservationActionApi(
