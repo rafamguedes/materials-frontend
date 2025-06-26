@@ -17,17 +17,18 @@ import {
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
-import { axiosInstance } from '../../api/Axios';
-import axiosInstance from '../../api/Axios';
+import { fetchReservationByIdApi } from '../../api/ReservationApi';
 import type { ItemType } from '../../types/ItemType';
+import { fetchItemsApi } from '../../api/ItemApi';
+import { axiosInstance } from '../../api/Axios';
 
 const { Title } = Typography;
 
 const statusOptions = [
   { value: 'PENDING', label: 'Pendente' },
   { value: 'IN_PROGRESS', label: 'Em progresso' },
-  { value: 'COMPLETED', label: 'Finalizado' },
-  { value: 'CANCELED', label: 'Cancelado' },
+  { value: 'CONFIRMED', label: 'Finalizado' },
+  { value: 'CANCELLED', label: 'Cancelado' },
 ];
 
 type ReservationDTO = {
@@ -65,15 +66,15 @@ const EditReservationPage: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    axiosInstance
-      .get<ReservationDTO>(`/reservations/${id}`)
-      .then((res: { data: ReservationDTO }) => {
-        setReservation(res.data);
+    fetchReservationByIdApi(Number(id))
+      .then((res) => {
+        setReservation(res);
         form.setFieldsValue({
-          dateTime: res.data.dateTime ? dayjs(res.data.dateTime) : undefined,
-          status: res.data.status,
-          itemId: res.data.itemId,
+          dateTime: res.dateTime ? dayjs(res.dateTime) : undefined,
+          status: res.status,
+          itemId: res.itemId,
         });
+        console.log('Reserva carregada:', res);
       })
       .catch(() =>
         notification.error({
@@ -86,9 +87,10 @@ const EditReservationPage: React.FC = () => {
 
   useEffect(() => {
     setItemsLoading(true);
-    axiosInstance
-      .get<{ data: ItemType[] }>('/items?rows=20')
-      .then((res: { data: { data: ItemType[] } }) => setItems(res.data.data))
+    fetchItemsApi()
+      .then((res) => {
+        setItems(res.data);
+      })
       .catch(() =>
         notification.error({
           message: 'Erro ao carregar equipamentos',

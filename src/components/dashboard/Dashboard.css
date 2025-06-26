@@ -1,0 +1,204 @@
+.user-dasboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.demo-logo-vertical {
+  height: 64px;
+  margin: 16px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  gap: 7px;
+}
+.user-dasboard h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dashboard-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.dashboard-menu ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.dashboard-menu li {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.dashboard-menu a {
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.dashboard-menu a:hover {
+  background-color: #0056b3;
+}
+
+.dashboard-menu a.active {
+  background-color: #0056b3;
+}
+
+/* Calendário customizado para o dashboard do usuário */
+.user-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Ajuste visual do calendário */
+.ant-picker-calendar,
+.ant-picker-calendar-full {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 8px;
+}
+
+.ant-picker-calendar .ant-picker-panel {
+  border-radius: 12px;
+}
+
+.ant-picker-calendar-date {
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.ant-picker-calendar-date-today {
+  border: 1.5px solid #1976d2;
+}
+
+.ant-picker-calendar-date-selected {
+  background: #e3f2fd !important;
+  border-radius: 8px;
+}
+
+.ant-picker-calendar .ant-picker-content th {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.ant-picker-calendar .ant-picker-cell-selected .ant-picker-calendar-date {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.events .ant-badge-status {
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notes-month {
+  font-size: 28px;
+  text-align: center;
+}
+.notes-month section {
+  font-size: 28px;
+}
+
+/* Dashboard geral */
+.demo-logo-vertical {
+  height: 64px;
+  margin: 16px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  gap: 7px;
+}
+.user-dashboard h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.dashboard-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.dashboard-menu ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.dashboard-menu li {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.dashboard-menu a {
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  color: #fff;
+    background-color: #007bff;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.dashboard-menu a:hover,
+.dashboard-menu a.active {
+  background-color: #0056b3;
+}
+
+.equipment-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #1976d2 !important;
+  color: #FFF !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.ant-table-tbody > tr > td {
+  font-size: 0.9rem;
+}
+
+.row-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}

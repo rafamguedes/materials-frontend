@@ -1,19 +1,16 @@
 import React from 'react';
-import { Modal, Form, Input, Button, notification } from 'antd';
-import { useUserContext } from '../../context/UserContext';
+import { Drawer, Form, Input, Button, notification } from 'antd';
 import { createUserApi } from '../../api/UserApi';
 
-type CreateUserModalProps = {
+type RegisterDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
-  filter: any;
-  onCreate?: () => void;
+  onRegister?: () => void;
 };
 
-function Create({ isOpen, onClose, onCreate, filter }: CreateUserModalProps) {
+function Register({ isOpen, onClose, onRegister }: RegisterDrawerProps) {
   const [form] = Form.useForm();
   const [loading, setLoading] = React.useState(false);
-  const { fetchUsers } = useUserContext();
   const [api, contextHolder] = notification.useNotification();
 
   const notify = (type: 'success' | 'error', message: string, description?: string) => {
@@ -35,18 +32,17 @@ function Create({ isOpen, onClose, onCreate, filter }: CreateUserModalProps) {
       form.resetFields();
       onClose();
 
-      await fetchUsers(filter, true);
-      if (onCreate) onCreate();
+      if (onRegister) onRegister();
       setTimeout(() => {
-        notify('success', 'Usuário criado com sucesso!');
+        notify('success', 'Usuário registrado com sucesso!');
       }, 300);
     } catch (err: any) {
       const apiMessage =
         err?.response?.data?.message ||
         (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
         err?.message ||
-        'Erro ao criar usuário';
-      notify('error', 'Erro ao criar usuário', apiMessage);
+        'Erro ao registrar usuário';
+      notify('error', 'Erro ao registrar usuário', apiMessage);
     } finally {
       setLoading(false);
     }
@@ -58,29 +54,29 @@ function Create({ isOpen, onClose, onCreate, filter }: CreateUserModalProps) {
   };
 
   return (
-    <Modal
-      title="Novo Usuário"
+    <Drawer
+      title="Registrar Usuário"
       open={isOpen}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      confirmLoading={loading}
-      footer={[
-        <Button key="cancel" onClick={handleCancel} disabled={loading}>
-          Cancelar
-        </Button>,
-        <Button
-          key="submit"
-          type="primary"
-          onClick={handleOk}
-          loading={loading}
-          style={{
-            background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-            border: 'none',
-          }}
-        >
-          Salvar
-        </Button>,
-      ]}
+      onClose={handleCancel}
+      width={400}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          <Button onClick={handleCancel} disabled={loading}>
+            Cancelar
+          </Button>
+          <Button
+            type="primary"
+            onClick={handleOk}
+            loading={loading}
+            style={{
+              background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+              border: 'none',
+            }}
+          >
+            Registrar
+          </Button>
+        </div>
+      }
       destroyOnClose
     >
       {contextHolder}
@@ -95,7 +91,10 @@ function Create({ isOpen, onClose, onCreate, filter }: CreateUserModalProps) {
         <Form.Item
           label="E-mail"
           name="email"
-          rules={[{ required: true, message: 'Informe o e-mail' }]}
+          rules={[
+            { required: true, message: 'Informe o e-mail' },
+            { type: 'email', message: 'E-mail inválido' },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -106,9 +105,22 @@ function Create({ isOpen, onClose, onCreate, filter }: CreateUserModalProps) {
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          label="Senha"
+          name="password"
+          rules={[{ required: true, message: 'Informe a senha' }]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item
+          label="CEP"
+          name="postalCode"
+        >
+          <Input />
+        </Form.Item>
       </Form>
-    </Modal>
+    </Drawer>
   );
 }
 
-export default Create;
+export default Register;

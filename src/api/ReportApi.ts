@@ -1,4 +1,4 @@
-import axiosInstance from './Axios';
+import { axiosInstance } from './Axios';
 
 export async function fetchInactiveUsersReport(
   startDate: string,

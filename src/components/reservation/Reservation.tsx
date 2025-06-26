@@ -30,10 +30,12 @@ function ReservationList() {
     order: 'DESC',
     orderByColumn: 'ID',
   });
+  
   const [modalOpen, setModalOpen] = useState(false);
   const [actionModalOpen, setActionModalOpen] = useState(false);
   const [actionType, setActionType] = useState<'start' | 'finish' | 'cancel'>('start');
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  
   useEffect(() => {
     setReservations([]);
     setNextToken(undefined);
@@ -117,10 +119,10 @@ const navigate = useNavigate();
       key: 'status',
       render: (value: string) => {
         const statusMap: Record<string, { label: string; className: string }> = {
-          PENDING: { label: 'Pendente', className: 'pending' },
-          IN_PROGRESS: { label: 'Em progresso', className: 'in_progress' },
-          COMPLETED: { label: 'Finalizado', className: 'completed' },
-          CANCELED: { label: 'Cancelado', className: 'canceled' },
+          PENDENTE: { label: 'PENDENTE', className: 'pending' },
+          EM_PROGRESSO: { label: 'EM PROGRESSO', className: 'in_progress' },
+          FINALIZADO: { label: 'FINALIZADO', className: 'completed' },
+          CANCELADO: { label: 'CANCELADO', className: 'canceled' },
         };
         const status = statusMap[value] || { label: value, className: '' };
         return (
@@ -149,7 +151,7 @@ const navigate = useNavigate();
             type="text"
             icon={<FaEdit />}
             title="Editar"
-            onClick={() => navigate(`/reservations/edit/${record.id}`)}
+            onClick={() => navigate(`/reserva/editar/${record.id}`)}
             style={{ fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
           <Popconfirm
             title="Confirmar exclusão"
@@ -177,7 +179,7 @@ const navigate = useNavigate();
     <>
       <div className="reservation-container">
         <header className="reservation-header">
-          <h1>Reservas</h1>
+          <h1>Painel de Reservas</h1>
           <HeaderPage
             onCreate={() => setModalOpen(true)}
             onStart={() => { setActionType('start'); setActionModalOpen(true); }}
@@ -242,8 +244,8 @@ const navigate = useNavigate();
               <Option value="">Todos</Option>
               <Option value="PENDING">Pendente</Option>
               <Option value="IN_PROGRESS">Em progresso</Option>
-              <Option value="COMPLETED">Finalizado</Option>
-              <Option value="CANCELED">Cancelado</Option>
+              <Option value="CONFIRMED">Finalizado</Option>
+              <Option value="CANCELLED">Cancelado</Option>
             </Select>
           </div>
           <div className="filter-group">
@@ -296,12 +298,14 @@ const navigate = useNavigate();
           </div>
         )}
       </div>
+
       <CreateReservationModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         filter={filter}
         onCreate={() => fetchReservations({ ...filter }, true)}
       />
+      
       <ReservationActionModal
         open={actionModalOpen}
         onClose={() => setActionModalOpen(false)}
