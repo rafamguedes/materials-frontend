@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { AuthContextData, LoginType } from "../types/AuthContextData";
-import { axiosInstance } from "../api/Axios";
+import { axiosInstance } from "../api";
 import { useNavigate } from "react-router-dom";
 import type { UserTokenType } from "../types/UserType";
 

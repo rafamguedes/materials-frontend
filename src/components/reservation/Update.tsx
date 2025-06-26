@@ -17,10 +17,10 @@ import {
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
-import { fetchReservationByIdApi } from '../../api/ReservationApi';
+import { fetchReservationByIdApi } from '../../api/reservation';
 import type { ItemType } from '../../types/ItemType';
-import { fetchItemsApi } from '../../api/ItemApi';
-import { axiosInstance } from '../../api/Axios';
+import { fetchItemsApi } from '../../api/item';
+import { axiosInstance } from '../../api';
 
 const { Title } = Typography;
 

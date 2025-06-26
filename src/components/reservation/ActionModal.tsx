@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Drawer, Input, Descriptions, Button, Spin, notification, Space } from 'antd';
-import { reservationActionApi, fetchReservationByCodeApi } from '../../api/ReservationApi';
+import { reservationActionApi, fetchReservationByCodeApi } from '../../api/reservation';
 
 type ReservationActionModalProps = {
   open: boolean;

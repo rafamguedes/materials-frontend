@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, DatePicker, Button, Select, notification } from 'antd';
 import { useReservationContext } from '../../context/ReservationContext';
-import { createReservationApi } from '../../api/ReservationApi';
+import { createReservationApi } from '../../api/reservation';
 import { useFetchItems } from '../../hooks/useFetchItems';
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import 'dayjs/locale/pt-br';

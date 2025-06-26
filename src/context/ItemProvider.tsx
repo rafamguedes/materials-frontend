@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { ItemType } from '../types/ItemType';
 import type { ItemFilterType } from '../types/ItemType';
-import { fetchItemsApi } from '../api/ItemApi';
+import { fetchItemsApi } from '../api/item';
 import { ItemContext } from './ItemContext';
 
 export const ItemProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { ReservationContext } from './ReservationContext';
 import type { ReservationType } from '../types/ReservationType';
 import type { ReservationFilterType } from '../types/ReservationFilterType';
-import { fetchReservationsApi } from '../api/ReservationApi';
+import { fetchReservationsApi } from '../api/reservation';
 
 export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [reservations, setReservations] = useState<ReservationType[]>([]);

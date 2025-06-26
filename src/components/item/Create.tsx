@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, Select, Button, notification } from 'antd';
 import { useItemContext } from '../../context/ItemContext';
-import { createItemApi } from '../../api/ItemApi';
+import { createItemApi } from '../../api/item';
 
 type CreateItemModalProps = {
   isOpen: boolean;

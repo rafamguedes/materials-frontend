@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Input, Button, notification, Spin, Switch } from 'antd';
 import { useUserContext } from '../../context/UserContext';
-import { updateUserApi, fetchUserByIdApi } from '../../api/UserApi';
+import { updateUserApi, fetchUserByIdApi } from '../../api/user';
 import type { UserType } from '../../types/UserType';
 
 type UpdateUserModalProps = {

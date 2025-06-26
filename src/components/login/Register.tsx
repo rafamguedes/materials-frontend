@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Form, Input, Button, notification } from 'antd';
-import { createUserApi } from '../../api/UserApi';
+import { createUserApi } from '../../api/user';
 
 type RegisterDrawerProps = {
   isOpen: boolean;

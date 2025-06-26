@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Form, Input, Button, notification } from 'antd';
 import { useUserContext } from '../../context/UserContext';
-import { createUserApi } from '../../api/UserApi';
+import { createUserApi } from '../../api/user';
 
 type CreateUserModalProps = {
   isOpen: boolean;

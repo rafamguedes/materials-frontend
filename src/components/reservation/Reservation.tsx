@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { ReservationFilterType } from '../../types/ReservationFilterType';
 import { useReservationContext } from '../../context/ReservationContext';
 import { Table, Button, Input, Select, Space, Popconfirm } from 'antd';
-import { deleteReservationApi } from '../../api/ReservationApi';
+import { deleteReservationApi } from '../../api/reservation';
 import ReservationActionModal from './ActionModal';
 import CreateReservationModal from './Create';
 import { SearchOutlined } from '@ant-design/icons';

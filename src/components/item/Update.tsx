@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, Button, notification, Spin } from 'antd';
 import { useItemContext } from '../../context/ItemContext';
-import { updateItemApi, fetchItemByIdApi } from '../../api/ItemApi';
+import { updateItemApi, fetchItemByIdApi } from '../../api/item';
 import type { ItemType } from '../../types/ItemType';
 
 type UpdateItemModalProps = {

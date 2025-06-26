@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { UserType } from '../types/UserType';
 import type { UserFilterType } from '../types/UserType';
-import { fetchUsersApi } from '../api/UserApi';
+import { fetchUsersApi } from '../api/user';
 import { UserContext } from './UserContext';
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

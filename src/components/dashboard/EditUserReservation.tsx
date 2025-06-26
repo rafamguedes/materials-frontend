@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Form, DatePicker, Select, message } from 'antd';
 import dayjs from 'dayjs';
 import locale from 'antd/es/date-picker/locale/pt_BR';
-import { updateReservationApi } from '../../api/ReservationApi';
+import { updateReservationApi } from '../../api/reservation';
 import type { ItemType } from '../../types/ItemType';
 import type { ReservationType } from '../../types/ReservationType';
-import { fetchItemsApi } from '../../api/ItemApi';
+import { fetchItemsApi } from '../../api/item';
 
 type Props = {
   open: boolean;

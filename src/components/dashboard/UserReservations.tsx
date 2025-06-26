@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Button, Tag, message, Empty, Select, Row, Space, Popconfirm } from 'antd';
-import { fetchReservationsApi, deleteReservationApi } from '../../api/ReservationApi';
+import { fetchReservationsApi, deleteReservationApi } from '../../api/reservation';
 import type { ReservationType } from '../../types/ReservationType';
 import { useAuth } from '../../context/AuthProvider';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';

@@ -4,8 +4,8 @@ import type { Dayjs } from 'dayjs';
 import locale from 'antd/es/date-picker/locale/pt_BR';
 import 'dayjs/locale/pt-br';
 import dayjs from 'dayjs';
-import { createReservationApi } from '../../api/ReservationApi';
-import { fetchItemsApi } from '../../api/ItemApi';
+import { createReservationApi } from '../../api/reservation';
+import { fetchItemsApi } from '../../api/item';
 import type { ItemType } from '../../types/ItemType';
 
 type Props = {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Button, Input, Space, Popconfirm, Select, message, notification } from 'antd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useItemContext } from '../../context/ItemContext';
-import { deleteItemApi } from '../../api/ItemApi';
+import { deleteItemApi } from '../../api/item';
 import type { ItemFilterType, ItemType } from '../../types/ItemType';
 import './Item.css';
 import Create from './Create';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Tabs, Button, DatePicker, Form, message, Radio, ConfigProvider } from 'antd';
-import { fetchInactiveUsersReport } from '../../api/ReportApi';
+import { fetchInactiveUsersReport } from '../../api/report';
 import ptBR from 'antd/es/locale/pt_BR';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';

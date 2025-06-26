@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, Button, Input, Space, Popconfirm, Select, message, notification } from 'antd';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useUserContext } from '../../context/UserContext';
-import { deleteUserApi } from '../../api/UserApi';
+import { deleteUserApi } from '../../api/user';
 import type { UserFilterType, UserType } from '../../types/UserType';
 import Create from './Create';
 import Update from './Update';

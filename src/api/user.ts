@@ -1,4 +1,4 @@
-import { axiosInstance } from './Axios';
+import { axiosInstance } from '.';
 import type { UserType } from '../types/UserType';
 import type { UserFilterType } from '../types/UserType';
 

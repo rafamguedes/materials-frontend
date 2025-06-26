@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, DatePicker, Form, message, Radio, ConfigProvider } from 'antd';
-import { fetchReservationsReport } from '../../api/ReportApi';
+import { fetchReservationsReport } from '../../api/report';
 import ptBR from 'antd/es/locale/pt_BR';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
