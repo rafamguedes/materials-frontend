@@ -112,12 +112,6 @@ function Register({ isOpen, onClose, onRegister }: RegisterDrawerProps) {
         >
           <Input.Password />
         </Form.Item>
-        <Form.Item
-          label="CEP"
-          name="postalCode"
-        >
-          <Input />
-        </Form.Item>
       </Form>
     </Drawer>
   );
