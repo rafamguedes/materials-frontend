@@ -1,6 +1,6 @@
 import './Header.css';
 import { useAuth } from '../../context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaLaptopCode } from 'react-icons/fa';
 
 const Header = () => {
@@ -22,10 +22,10 @@ const Header = () => {
         </div>
 
         <nav className="menu-items">
-          <a href="/" className="menu-item">Reservas</a>
-          <a href="/equipamentos" className="menu-item">Equipamentos</a>
-          <a href="/usuarios" className="menu-item">Usuários</a>
-          <a href="/relatorios" className="menu-item">Relatórios</a>
+          <Link to="/reservas" className="menu-item">Reservas</Link>
+          <Link to="/equipamentos" className="menu-item">Equipamentos</Link>
+          <Link to="/usuarios" className="menu-item">Usuários</Link>
+          <Link to="/relatorios" className="menu-item">Relatórios</Link>
           <a href="/logout" className="menu-item" onClick={handleLogout}>Logout</a>
         </nav>
       </div>

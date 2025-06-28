@@ -24,7 +24,17 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
-    localStorage.getItem("token");
+    async function loadStorageData() {
+      const storageUser = localStorage.getItem("@Auth:user");
+      const storageToken = localStorage.getItem("@Auth:access_token");
+
+      if (storageUser && storageToken) {
+        setUser(JSON.parse(storageUser));
+      }
+      setLoading(false);
+    }
+
+    loadStorageData();
   }, []);
 
   const Login = async ({ email, password }: LoginType) => {
@@ -36,7 +46,8 @@ export const AuthProvider = ({ children }: any) => {
       setUser(loggedInUser);
       setToken(token);
 
-      localStorage.setItem("token", token);
+      localStorage.setItem("@Auth:access_token", token);
+      localStorage.setItem("@Auth:user", JSON.stringify(loggedInUser));
       navigate('/');
     } catch (err: any) {
       const apiMessage = err?.response?.data?.message || 

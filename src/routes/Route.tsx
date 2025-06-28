@@ -12,7 +12,6 @@ import Reports from '../components/reports/Reports';
 import { UserList } from '../components/user/User';
 import UserDashboard from '../components/dashboard/Dashboard';
 
-// Layout para ADMIN/MANAGER
 function AdminManagerLayout({ children }: { children: React.ReactNode }) {
   return (
     <Layout>
@@ -24,7 +23,6 @@ function AdminManagerLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Layout para USER
 function UserLayout({ children }: { children: React.ReactNode }) {
   return (
     <Layout>
