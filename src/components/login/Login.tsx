@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { FaLaptopCode, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthProvider';
 import { notification } from 'antd';
-import './Login.css';
-import { FaLaptopCode, FaEye, FaEyeSlash } from 'react-icons/fa';
 import Register from './Register';
+import './Login.css';
 
 function LoginPage() {
   const { Login } = useAuth();
@@ -18,7 +18,7 @@ function LoginPage() {
     api[type]({
       message,
       description,
-      showProgress: true,
+      showProgress: false,
       pauseOnHover: true,
     });
   };
@@ -37,8 +37,13 @@ function LoginPage() {
     
     try {
       Login({ email, password });
-    } catch (err) {
-      notify('error', 'Erro ao registrar usuário');
+    } catch (err: any) {
+      const apiMessage =
+        err?.response?.data?.message ||
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message ||
+        'Erro ao fazer login';
+      notify('error', 'Erro ao fazer login', apiMessage);
     }
   };
 
@@ -47,7 +52,7 @@ function LoginPage() {
       <div className="info">
         <h1>KIPFLOW</h1>
         <p>
-          Gerenciamento de reservas de equipamentos
+          Gerenciamento de reservas e equipamentos
         </p>
         <FaLaptopCode style={{ fontSize: '160px', color: '#fff' }} />
       </div>
@@ -84,7 +89,7 @@ function LoginPage() {
               tabIndex={0}
               aria-label={showPassword ? 'Esconder senha' : 'Mostrar senha'}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
           <button type="submit">Entrar</button>

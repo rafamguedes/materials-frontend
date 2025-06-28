@@ -1,69 +1,72 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { AuthContextData, LoginType } from "../types/AuthContextData";
-import { axiosInstance } from "../api";
-import { useNavigate } from "react-router-dom";
 import type { UserTokenType } from "../types/UserType";
+import { useNavigate } from "react-router-dom";
+import { login, logout } from "../api/login";
+import { notification } from "antd";
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserTokenType | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [api, contextHolder] = notification.useNotification();
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storageUser = localStorage.getItem("@Auth:user");
-    const storageToken = localStorage.getItem("@Auth:access_token");
+  const notify = (type: 'success' | 'error', message: string, description?: string) => {
+    api[type]({
+      message,
+      description,
+      showProgress: false,
+      pauseOnHover: true,
+    });
+  };
 
-    if (storageUser && storageToken) {
-      setUser(JSON.parse(storageUser));
-    }
-    setLoading(false);
+  useEffect(() => {
+    localStorage.getItem("token");
   }, []);
 
   const Login = async ({ email, password }: LoginType) => {
-    setLoading(true);
     try {
-      const res = await axiosInstance.post("/authentication/login", {
-        email,
-        password,
-      });
-
+      const res = await login({ email, password });
       const { token, id, name, email: userEmail, role } = res.data;
       const loggedInUser = { id, name, email: userEmail, role, token };
 
       setUser(loggedInUser);
       setToken(token);
 
-      localStorage.setItem("@Auth:access_token", token);
-      localStorage.setItem("@Auth:user", JSON.stringify(loggedInUser));
+      localStorage.setItem("token", token);
       navigate('/');
-    } catch (err) {
-      console.error(err);
-      console.log("Erro ao fazer login");
-    } finally {
-      setLoading(false);
+    } catch (err: any) {
+      const apiMessage = err?.response?.data?.message || 
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message || 'Erro ao fazer login';
+      notify('error', 'Erro ao fazer login', apiMessage);
     }
   };
 
   const Logout = async () => {
     try {
-      await axiosInstance.post("/authentication/logout");
+      setLoading(true);
+      await logout();
     } catch (err) {
-      console.error("Erro ao fazer logout", err);
+      console.error('Erro ao fazer logout:', err);
     } finally {
-      localStorage.clear();
       setUser(null);
+      setToken(null);
+      setLoading(false);
       navigate('/login');
+      notify('success', 'Logout realizado com sucesso');
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, token, loading, Login, Logout }}
+      value={{ signed: !!user, user, token, Login, loading, Logout }}
     >
       {children}
+      {contextHolder}
     </AuthContext.Provider>
   );
 };
