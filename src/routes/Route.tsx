@@ -1,16 +1,16 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import ReservationList from '../components/reservation/Reservation';
-import EditReservationPage from '../components/reservation/Update';
+import ReservationList from '../pages/reservation/Reservation';
+import EditReservationPage from '../pages/reservation/Update';
 import { Loading } from '../components/loading/Loading';
-import { useAuth } from '../context/AuthProvider';
-import ItemList from '../components/item/Item';
+import { useAuth } from '../contexts/AuthProvider';
+import ItemList from '../pages/item/Item';
 import { Layout } from 'antd';
 import React from 'react';
 import Menu from '../components/header/Header';
-import { LoginPage } from '../components/login/Login';
-import Reports from '../components/reports/Reports';
-import { UserList } from '../components/user/User';
-import UserDashboard from '../components/dashboard/Dashboard';
+import { LoginPage } from '../pages/login/Login';
+import Reports from '../pages/reports/Reports';
+import { UserList } from '../pages/user/User';
+import UserDashboard from '../pages/dashboard/Dashboard';
 
 function AdminManagerLayout({ children }: { children: React.ReactNode }) {
   return (

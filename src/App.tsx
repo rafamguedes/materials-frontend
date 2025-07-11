@@ -1,9 +1,9 @@
-import { ReservationProvider } from './context/ReservationProvider';
-import 'antd/dist/reset.css';
-import { ItemProvider } from './context/ItemProvider';
+import { ReservationProvider } from './contexts/ReservationProvider';
+import { ItemProvider } from './contexts/ItemProvider';
+import { AuthProvider } from './contexts/AuthProvider';
+import { UserProvider } from './contexts/UserProvider';
 import { AppRoutes } from './routes/Route';
-import { AuthProvider } from './context/AuthProvider';
-import { UserProvider } from './context/UserProvider';
+import 'antd/dist/reset.css';
 
 function App() {
   return (

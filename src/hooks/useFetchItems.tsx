@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import type { ItemType } from '../types/ItemType';
-import { fetchItemsApi } from '../api/item';
+import { fetchItemsApi } from '../apis/item';
 
 export function useFetchItems(open: boolean) {
   const [items, setItems] = useState<ItemType[]>([]);
