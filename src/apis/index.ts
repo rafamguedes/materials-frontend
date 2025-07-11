@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosRequestHeaders } from 'axios';
 
-export const HOST = 'http://localhost:8080/api/v1';
+export const HOST = 'https://materials-backend-production.up.railway.app/api/v1';
 
 export const axiosInstance = axios.create({
   baseURL: HOST,
