@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserTokenType | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [api, contextHolder] = notification.useNotification();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   const notify = (type: 'success' | 'error', message: string, description?: string) => {
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: any) => {
 
       if (storageUser && storageToken) {
         setUser(JSON.parse(storageUser));
+        setToken(storageToken);
       }
       setLoading(false);
     }
